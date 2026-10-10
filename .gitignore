@@ -1,0 +1,6 @@
+# Local simulation exports
+market-lab-trace-*.csv
+
+# Operating system files
+Thumbs.db
+.DS_Store
