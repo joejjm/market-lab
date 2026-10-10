@@ -4,7 +4,7 @@ Market Lab is a browser-based, agent-based stock-market sandbox for exploring ho
 
 ## Run it
 
-Open `index.html` in a modern browser. The app uses plain HTML, CSS, and JavaScript; no build step or package installation is required. An internet connection enables the optional web fonts, with system-font fallbacks available offline.
+Open `index.html` in a modern browser. The app uses plain HTML, CSS, and JavaScript; no build step or package installation is required. An internet connection enables the optional web fonts, with system-font fallbacks available offline. There is currently no Python source code in this project.
 
 ## Publish on GitHub Pages
 
@@ -29,7 +29,19 @@ Filled orders become public after a simulated-minute delay. Automated agents use
 
 Download the trace as CSV for later analysis; the export includes decision records plus the run's seed and configuration. Evidence links describe observed influence paths; they are not proof of causality. To estimate causal effects, compare runs using the same seed while varying one factor at a time.
 
-**LLM-style** is a local behavioral proxy that combines a strategy signal, valuation gap, and observed order flow with a longer information-processing delay. It does not call a language model. A live LLM connector is intentionally not included; real provider credentials should be kept behind a server-side integration rather than in browser code.
+### LLM proxy versus a real LLM
+
+The current **LLM-style** controller is only a local behavioral proxy. It combines strategy signals, valuation gaps, and observed order flow, and assigns a longer information-processing delay. It does **not** load, call, or otherwise use a language model. Its displayed rationale is the prototype's explicit input factors—not generated model reasoning.
+
+Adding real LLM traders in a future modification would require more than changing the controller label. It would require integrating a model/provider, designing and versioning the agent prompts and structured action format, and routing requests through a server-side backend. Provider API keys must never be placed in this public repository or browser code. The backend would also need to manage and monitor:
+
+- Tokenized prompt and context construction, including which market events, agent observations, and history are sent to each model.
+- Per-agent and per-run token limits, usage accounting, budget caps, and estimated/actual costs.
+- Provider rate limits, concurrency, timeouts, retries, and behavior when the model is unavailable or returns invalid output.
+- Model selection/versioning, response latency as simulated or real decision time, and reproducibility (LLM responses are not guaranteed to repeat even with the same simulation seed).
+- Logging sufficient to evaluate decisions without unnecessarily retaining sensitive human or provider data.
+
+GitHub Pages alone cannot securely hold provider secrets or coordinate private model calls. A live LLM setup would need a backend service and a deliberate approach to cost controls and data handling.
 
 ## Model boundaries
 
